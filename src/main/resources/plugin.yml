@@ -1,0 +1,10 @@
+name: Hub
+version: '${project.version}'
+main: net.pvpmines.Hub
+api-version: 1.19
+commands:
+  discord:
+  twitter:
+  store:
+  website:
+    aliases: [forums]

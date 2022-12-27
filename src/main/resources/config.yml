@@ -1,0 +1,25 @@
+discord: "discord"
+twitter: "twitter"
+store: "store"
+website: "website"
+
+join:
+  message:
+    - "&f&m-------------------------------"
+    - "&cHello %player% to PVPMines"
+    - "Discord - %discord%"
+    - "Twitter - %twitter%"
+    - "Store - %store%"
+    - "Website - %website%"
+    - "&f&m-------------------------------"
+
+scoreboard:
+  title: ""
+  normal:
+    - ""
+    - ""
+    - ""
+  queue:
+    - ""
+    - ""
+    - ""
