@@ -3,6 +3,9 @@ twitter: "twitter"
 store: "store"
 website: "website"
 
+shown: "&aYou have enabled players visiblity"
+hidden: "&cYou have disabled players visiblity"
+
 join:
   message:
     - "&f&m-------------------------------"
@@ -13,6 +16,29 @@ join:
     - "Website - %website%"
     - "&f&m-------------------------------"
 
+launchpad:
+  block: "GOLD_BLOCK"
+
+items:
+  selector:
+    item: "NETHER_STAR"
+    data: 0
+    name: "&eServer Selector"
+    lore:
+      - "&f&m---------------------------------"
+      - "&7&oRight click to choose server"
+      - "&f&m---------------------------------"
+    slot: 3
+  visiblity:
+    item: "INK_SACK"
+    data: 10
+    new: 8
+    name: "&aToggle Players"
+    lore:
+      - "&f&m------------------------------------"
+      - "&7Right click to toggle players"
+      - "&f&m------------------------------------"
+    slot: 5
 scoreboard:
   title: ""
   normal:
