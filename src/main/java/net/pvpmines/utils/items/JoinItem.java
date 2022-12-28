@@ -21,7 +21,7 @@ public class JoinItem {
 
         selector(event.getPlayer());
         visiblity(event.getPlayer());
-
+        cosmetic(event.getPlayer());
     }
 
     private void selector(Player player){
@@ -51,6 +51,24 @@ public class JoinItem {
             lore.add(CC.translate(i));
         }
         int slot = this.hub.getConfig().getInt("items.visiblity.slot");
+
+        ItemStack stack = new ItemStack(Material.valueOf(material), 1, (byte) data);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName(CC.translate(name));
+        meta.setLore(lore);
+        stack.setItemMeta(meta);
+        player.getInventory().setItem(slot, stack);
+    }
+
+    private void cosmetic(Player player) {
+        String material = this.hub.getConfig().getString("items.cosmetic.item");
+        int data = this.hub.getConfig().getInt("items.cosmetic.data");
+        String name = this.hub.getConfig().getString("items.cosmetic.name");
+        ArrayList<String> lore = new ArrayList<>();
+        for (final String i : this.hub.getConfig().getStringList("items.cosmetic.lore")) {
+            lore.add(CC.translate(i));
+        }
+        int slot = this.hub.getConfig().getInt("items.cosmetic.slot");
 
         ItemStack stack = new ItemStack(Material.valueOf(material), 1, (byte) data);
         ItemMeta meta = stack.getItemMeta();

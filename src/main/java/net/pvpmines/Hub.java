@@ -8,10 +8,12 @@ import net.pvpmines.command.StoreCommand;
 import net.pvpmines.command.TwitterCommand;
 import net.pvpmines.command.WebsiteCommand;
 import net.pvpmines.listener.HubListener;
+import net.pvpmines.queue.task.QueueTask;
 import net.pvpmines.scoreboard.ScoreboardAdapter;
 
 import net.pvpmines.utils.bungeecord.BungeeListener;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +32,7 @@ public final class Hub extends JavaPlugin {
         this.listener();
         this.scoreboard();
         this.tab();
+        new QueueTask(this);
     }
 
     public static Hub getInstance() {

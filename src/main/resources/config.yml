@@ -1,19 +1,24 @@
-discord: "discord"
-twitter: "twitter"
-store: "store"
-website: "website"
+discord: "discord.gg/pvpmines"
+twitter: "twitter.com/pvpmines"
+store: "store.pvpmines.net"
+website: "pvpmines.net"
 
 shown: "&aYou have enabled players visiblity"
 hidden: "&cYou have disabled players visiblity"
 
+queues:
+  - "prisons"
+delay: 3 # in seconds
+
 join:
   message:
     - "&f&m-------------------------------"
-    - "&cHello %player% to PVPMines"
-    - "Discord - %discord%"
-    - "Twitter - %twitter%"
-    - "Store - %store%"
-    - "Website - %website%"
+    - "&7Welcome to &4&lPVP&fMines "
+    - ""
+    - "&a&lStore: &f%store%"
+    - "&e&lForums: &f%website%"
+    - "&9&lDiscord: &f%discord%"
+    - "&b&lTwitter: &f%twitter%"
     - "&f&m-------------------------------"
 
 launchpad:
@@ -28,7 +33,7 @@ items:
       - "&f&m---------------------------------"
       - "&7&oRight click to choose server"
       - "&f&m---------------------------------"
-    slot: 3
+    slot: 0
   visiblity:
     item: "INK_SACK"
     data: 10
@@ -38,13 +43,141 @@ items:
       - "&f&m------------------------------------"
       - "&7Right click to toggle players"
       - "&f&m------------------------------------"
-    slot: 5
+    slot: 4
+  cosmetic:
+    item: "BOOK"
+    data: 0
+    name: "&dCosmetics"
+    lore:
+      - "&f&m------------------------------------"
+      - "&7Right click to select cosmetic"
+      - "&f&m------------------------------------"
+    slot: 8
+
+inventory:
+  selector:
+    overlay: true
+    overlay-item: "STAINED_GLASS_PANE"
+    overlay-data: 5
+    title: "&aServer Selector"
+    size: 27
+    items:
+      1:
+        item: "DIAMOND_PICKAXE"
+        name: "&b&lPRISONS"
+        lore:
+          - "&f&m----------------------------"
+          - "&fRight click to connect"
+          - "&f&m----------------------------"
+        data: 0
+        slot: 12
+        server: "prison"
+      2:
+        item: "DIAMOND_SWORD"
+        name: "&b&lFACTIONS"
+        lore:
+          - "&f&m----------------------------"
+          - "&fRight click to connect"
+          - "&f&m----------------------------"
+        data: 0
+        slot: 14
+        server: "factions"
+  cosmetic:
+    overlay: true
+    overlay-item: "STAINED_GLASS_PANE"
+    overlay-data: 10
+    title: "&dCosmetic Selector"
+    size: 27
+    items: # DO NOT ADD OR CHANGE PRIORITY OF ITEMS, YOU CAN ONLY CHANGE ITEM NAME ETC
+      1:
+        item: "LEATHER_CHESTPLATE"
+        name: "&b&lARMOR"
+        lore:
+          - "&f&m----------------------------"
+          - "&fRight click to connect"
+          - "&f&m----------------------------"
+        data: 0
+        slot: 12
+      2:
+        item: "BLAZE_POWDER"
+        name: "&e&lPARTICLES"
+        lore:
+          - "&f&m----------------------------"
+          - "&fRight click to connect"
+          - "&f&m----------------------------"
+        data: 0
+        slot: 14
+
+cosmetic:
+  particle: # PARTICLES (FLAME, WATER, LAVA, EXPLOSION)
+    overlay: true
+    overlay-item: "STAINED_GLASS_PANE"
+    overlay-data: 10
+    title: "&dParticle Selector"
+    size: 27
+    items:
+      1:
+        item: "BLAZE_POWDER"
+        name: "&eFlame Particle"
+        lore:
+          - "&f&m----------------------------------------"
+          - "&7Right click to apply flame particle"
+          - "&f&m----------------------------------------"
+        data: 0
+        slot: 10
+        particle: "flame"
+      2:
+        item: "WATER_BUCKET"
+        name: "&9Water Particle"
+        lore:
+          - "&f&m----------------------------------------"
+          - "&7Right click to apply water particle"
+          - "&f&m----------------------------------------"
+        data: 0
+        slot: 12
+        particle: "water"
+      3:
+        item: "LAVA_BUCKET"
+        name: "&6Lava Particle"
+        lore:
+          - "&f&m----------------------------------------"
+          - "&7Right click to apply lava particle"
+          - "&f&m----------------------------------------"
+        data: 0
+        slot: 14
+        particle: "lava"
+      4:
+        item: "REDSTONE"
+        name: "&cHeart Particle"
+        lore:
+          - "&f&m----------------------------------------"
+          - "&7Right click to apply heart particle"
+          - "&f&m----------------------------------------"
+        data: 0
+        slot: 16
+        particle: "heart"
+      reset:
+        item: "REDSTONE_BLOCK"
+        name: "&cReset Particle"
+        lore:
+          - "&f&m----------------------------------------"
+          - "&7Right click to reset particle"
+          - "&f&m----------------------------------------"
+        data: 0
+        slot: 26
+
+
 scoreboard:
-  title: ""
+  title: "&4&lPVP&fMines &7(Hub)"
   normal:
-    - ""
-    - ""
-    - ""
+    - " "
+    - "&4&lPLAYER"
+    - "  &fAccount: &4%player%"
+    - " "
+    - "&4&LGLOBAL"
+    - "  &fPlayers: &4%online%"
+    - " "
+    - "&7&opvpmines.net"
   queue:
     - ""
     - ""
