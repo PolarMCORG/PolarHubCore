@@ -10,3 +10,4 @@ commands:
   store:
   website:
     aliases: [forums]
+  leavequeue:

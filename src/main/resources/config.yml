@@ -7,8 +7,13 @@ shown: "&aYou have enabled players visiblity"
 hidden: "&cYou have disabled players visiblity"
 
 queues:
-  - "prisons"
-delay: 3 # in seconds
+  - "prison"
+delay: 3 # in seconds FOR QUEUE SYSTEM
+priority: [1,2,3,4,5,6,7,8,9,10] # permission -> queue.priority.index
+queue-join: "You jave joined queue %player% %queue_position% %queue_size%"
+queue-leave: "You have left queue"
+queue-update: "%player% %queue_position% %queue_size%"
+
 
 join:
   message:
@@ -115,7 +120,7 @@ cosmetic:
     overlay-data: 10
     title: "&dParticle Selector"
     size: 27
-    items:
+    items: # PERMISSION -> hub.cosmetic.particle name from #particle
       1:
         item: "BLAZE_POWDER"
         name: "&eFlame Particle"
@@ -165,7 +170,42 @@ cosmetic:
           - "&f&m----------------------------------------"
         data: 0
         slot: 26
-
+  armor:
+    overlay: true
+    overlay-item: "STAINED_GLASS_PANE"
+    overlay-data: 10
+    title: "&aArmor Selector"
+    size: 27
+    items: # PERMISSION -> hub.armor.armor name from #armor
+      1:
+        item: "LEATHER_CHESTPLATE"
+        name: "&4&lOWNER &fArmor"
+        lore:
+          - "&f&m----------------------------------"
+          - "&7Right click to equip owner armor"
+          - "&f&m----------------------------------"
+        slot: 11
+        color: "MAROON"
+        armor: "owner"
+      2:
+        item: "LEATHER_CHESTPLATE"
+        name: "&e&lHELPER &fArmor"
+        lore:
+          - "&f&m----------------------------------"
+          - "&7Right click to equip helper armor"
+          - "&f&m----------------------------------"
+        slot: 10
+        color: "LIME"
+        armor: "helper"
+      reset:
+        item: "REDSTONE_BLOCK"
+        name: "&cReset Armor"
+        lore:
+          - "&f&m----------------------------------------"
+          - "&7Right click to reset armor"
+          - "&f&m----------------------------------------"
+        data: 0
+        slot: 26
 
 scoreboard:
   title: "&4&lPVP&fMines &7(Hub)"
@@ -182,3 +222,91 @@ scoreboard:
     - ""
     - ""
     - ""
+
+tab:
+  header: "HEADER"
+  footer: "FOOTER"
+  zero:
+    0: "zero 0"
+    1: "%player%"
+    2: ""
+    3: ""
+    4: ""
+    5: ""
+    6: ""
+    7: ""
+    8: ""
+    9: ""
+    10: ""
+    11: ""
+    12: ""
+    13: ""
+    14: ""
+    15: ""
+    16: ""
+    17: ""
+    18: ""
+    19: "zero 19"
+  first:
+    0: "first 0"
+    1: "%player%"
+    2: ""
+    3: ""
+    4: ""
+    5: ""
+    6: ""
+    7: ""
+    8: ""
+    9: ""
+    10: ""
+    11: ""
+    12: ""
+    13: ""
+    14: ""
+    15: ""
+    16: ""
+    17: ""
+    18: ""
+    19: "first 19"
+  second:
+    0: "second 0"
+    1: "%player%"
+    2: ""
+    3: ""
+    4: ""
+    5: ""
+    6: ""
+    7: ""
+    8: ""
+    9: ""
+    10: ""
+    11: ""
+    12: ""
+    13: ""
+    14: ""
+    15: ""
+    16: ""
+    17: ""
+    18: ""
+    19: "second 19"
+  third:
+    0: "third 0"
+    1: "%player%"
+    2: ""
+    3: ""
+    4: ""
+    5: ""
+    6: ""
+    7: ""
+    8: ""
+    9: ""
+    10: ""
+    11: ""
+    12: ""
+    13: ""
+    14: ""
+    15: ""
+    16: ""
+    17: ""
+    18: ""
+    19: "third 19"

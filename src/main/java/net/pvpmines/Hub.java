@@ -1,19 +1,18 @@
 package net.pvpmines;
 
+import io.github.nosequel.tab.TabHandler;
 import io.github.thatkawaiisam.assemble.Assemble;
 import io.github.thatkawaiisam.assemble.AssembleStyle;
 import lombok.Getter;
-import net.pvpmines.command.DiscordCommand;
-import net.pvpmines.command.StoreCommand;
-import net.pvpmines.command.TwitterCommand;
-import net.pvpmines.command.WebsiteCommand;
+import net.pvpmines.command.*;
 import net.pvpmines.listener.HubListener;
+import net.pvpmines.queue.Queue;
 import net.pvpmines.queue.task.QueueTask;
 import net.pvpmines.scoreboard.ScoreboardAdapter;
 
+import net.pvpmines.tablist.TabAdapter;
 import net.pvpmines.utils.bungeecord.BungeeListener;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,7 +31,10 @@ public final class Hub extends JavaPlugin {
         this.listener();
         this.scoreboard();
         this.tab();
-        new QueueTask(this);
+        new Queue().loadQueues();
+        for (final String queue : this.getConfig().getStringList("queues")) {
+            new QueueTask(this, queue);
+        }
     }
 
     public static Hub getInstance() {
@@ -49,6 +51,7 @@ public final class Hub extends JavaPlugin {
         getCommand("store").setExecutor(new StoreCommand(this));
         getCommand("twitter").setExecutor(new TwitterCommand(this));
         getCommand("website").setExecutor(new WebsiteCommand(this));
+        getCommand("leavequeue").setExecutor(new LeaveQueueCommand());
     }
 
     private void listener(){
@@ -63,6 +66,6 @@ public final class Hub extends JavaPlugin {
     }
 
     private void tab(){
-
+        new TabHandler(new TabAdapter(this), this, 20L);
     }
 }

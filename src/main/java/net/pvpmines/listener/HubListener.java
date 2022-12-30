@@ -1,8 +1,6 @@
 package net.pvpmines.listener;
 
 import lombok.Getter;
-import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import net.pvpmines.Hub;
 import net.pvpmines.cosmetics.Cosmetics;
 import net.pvpmines.queue.Queue;
@@ -10,13 +8,10 @@ import net.pvpmines.utils.CC;
 import net.pvpmines.utils.bungeecord.BungeeListener;
 import net.pvpmines.utils.inventory.CosmeticInventory;
 import net.pvpmines.utils.inventory.SelectorInventory;
+import net.pvpmines.utils.inventory.impl.ArmorInventory;
 import net.pvpmines.utils.inventory.impl.ParticleInventory;
 import net.pvpmines.utils.items.JoinItem;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +22,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -40,6 +37,7 @@ public class HubListener implements Listener {
     private SelectorInventory selectorInventory;
     private CosmeticInventory cosmeticInventory;
     private ParticleInventory particleInventory;
+    private ArmorInventory armorInventory;
     private final Cosmetics cosmetics = new Cosmetics();
 
     public HubListener(Hub hub) {
@@ -74,6 +72,7 @@ public class HubListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
+        this.queue.removePlayer(event.getPlayer());
     }
 
 
@@ -211,6 +210,25 @@ public class HubListener implements Listener {
         }
     }
 
+    /*
+        @EventHandler
+    public void onArmorInteract(PlayerInteractEvent event) {
+        if (event.getPlayer().getItemInHand() == null
+                || event.getPlayer().getItemInHand().getItemMeta() == null
+                || event.getPlayer().getItemInHand().getItemMeta().getDisplayName() == null) return;
+
+        if (!event.getPlayer().getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(
+                this.hub.getConfig().getString("items.armor.name")
+        ))) return;
+
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+            this.armorInventory = new ArmorInventory(this.hub, event.getPlayer());
+            this.armorInventory.loadItems();
+            this.armorInventory.open();
+        }
+    }
+     */
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory().getTitle().equalsIgnoreCase(CC.translate(this.hub.getConfig()
@@ -225,7 +243,7 @@ public class HubListener implements Listener {
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(this.hub
                     .getConfig().getString("inventory.selector.items." + i + ".name")))) {
                 event.getWhoClicked().sendMessage(this.hub.getConfig().getString("inventory.selector.items." + i + ".server"));
-                this.queue.insert((Player) event.getWhoClicked(), this.hub.getConfig().getString("inventory.selector.items." + i + ".server"));
+                this.queue.addPlayer((Player) event.getWhoClicked(), this.hub.getConfig().getString("inventory.selector.items." + i + ".server"));
             }
         }
     }
@@ -240,7 +258,10 @@ public class HubListener implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null || event.getCurrentItem().getItemMeta().getDisplayName() == null) return;
         if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(this.hub
                 .getConfig().getString("inventory.cosmetic.items.1.name")))) {
-            event.getWhoClicked().sendMessage("armor");
+            this.armorInventory = new ArmorInventory(this.hub, (Player) event.getWhoClicked());
+            event.getWhoClicked().closeInventory();
+            this.armorInventory.loadItems();
+            this.armorInventory.open();
         } else if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(this.hub
                 .getConfig().getString("inventory.cosmetic.items.2.name")))) {
             this.particleInventory = new ParticleInventory(this.hub, (Player) event.getWhoClicked());
@@ -265,7 +286,6 @@ public class HubListener implements Listener {
                     if (event.getWhoClicked().hasPermission("hub.cosmetic." + this.hub.getConfig().getString("cosmetic.particle.items." + i +".particle"))) {
                         this.cosmetics.applyEffect(event.getWhoClicked().getUniqueId(),
                                 this.cosmetics.getEffectFromString(this.hub.getConfig().getString("cosmetic.particle.items." + i + ".particle")));
-                        event.getWhoClicked().sendMessage(CC.translate("&aParticle successfully applied"));
                     } else {
                         event.getWhoClicked().sendMessage(CC.translate("&cNo Permissions"));
                     }
@@ -274,8 +294,109 @@ public class HubListener implements Listener {
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(this.hub.getConfig()
                     .getString("cosmetic.particle.items.reset.name")))) {
                 this.cosmetics.clearEffect(event.getWhoClicked().getUniqueId());
-                event.getWhoClicked().sendMessage(CC.translate("&cParticle successfully removed"));
             }
         }
+    }
+
+    @EventHandler
+    public void onArmorClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (event.getInventory().getTitle().equalsIgnoreCase(CC.translate(this.hub.getConfig()
+                .getString("cosmetic.armor.title")))) {
+            event.setCancelled(true);
+        }
+        for (final String i : this.hub.getConfig().getConfigurationSection("cosmetic.armor.items").getKeys(false)) {
+            if (event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null || event.getCurrentItem().getItemMeta().getDisplayName() == null) return;
+            if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(this.hub.getConfig()
+                    .getString("cosmetic.armor.items." + i + ".name"))) && this.hub.getConfig().getString("cosmetic.armor.items."+ i+ ".color") != null) {
+                if (player.hasPermission("hub.armor." + this.hub.getConfig().getString("cosmetic.armor.items." + i + ".armor"))) {
+                    equip(player, this.hub.getConfig().getString("cosmetic.armor.items." + i + ".color"));
+                } else {
+                    player.sendMessage(CC.translate("&cNo Permissions"));
+                }
+            } else if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(this.hub.getConfig()
+                    .getString("cosmetic.armor.items.reset.name")))) {
+                deEquip(player);
+            }
+        }
+    }
+
+    public void equip(Player player, String color){
+
+        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
+        ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+        ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
+        ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+
+        LeatherArmorMeta helmetMeta = (LeatherArmorMeta) helmet.getItemMeta();
+        helmetMeta.setColor(getColorByString(color));
+        helmet.setItemMeta(helmetMeta);
+
+        LeatherArmorMeta chestplateNeta = (LeatherArmorMeta) chestplate.getItemMeta();
+        chestplateNeta.setColor(getColorByString(color));
+        chestplate.setItemMeta(chestplateNeta);
+
+        LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) leggings.getItemMeta();
+        leggingsMeta.setColor(getColorByString(color));
+        leggings.setItemMeta(leggingsMeta);
+
+        LeatherArmorMeta bootsMeta = (LeatherArmorMeta) boots.getItemMeta();
+        bootsMeta.setColor(getColorByString(color));
+        boots.setItemMeta(bootsMeta);
+
+        player.getInventory().setHelmet(helmet);
+        player.getInventory().setChestplate(chestplate);
+        player.getInventory().setLeggings(leggings);
+        player.getInventory().setBoots(boots);
+    }
+
+    public void deEquip(Player player) {
+        if (player.getInventory().getChestplate() != null) {
+            player.getInventory().setHelmet(null);
+            player.getInventory().setChestplate(null);
+            player.getInventory().setLeggings(null);
+            player.getInventory().setBoots(null);
+        }
+    }
+
+    public Color getColorByString(String color) {
+
+        if (color.equalsIgnoreCase("maroon")) {
+            return Color.MAROON;
+        } else if (color.equalsIgnoreCase("red")) {
+            return Color.RED;
+        } else if (color.equalsIgnoreCase("aqua")) {
+            return Color.AQUA;
+        } else if (color.equalsIgnoreCase("black")) {
+            return Color.BLACK;
+        } else if (color.equalsIgnoreCase("blue")) {
+            return Color.BLUE;
+        } else if (color.equalsIgnoreCase("fuchsia")) {
+            return Color.FUCHSIA;
+        } else if (color.equalsIgnoreCase("gray")) {
+            return Color.GRAY;
+        } else if (color.equalsIgnoreCase("green")) {
+            return Color.GREEN;
+        } else if (color.equalsIgnoreCase("lime")) {
+            return Color.LIME;
+        } else if (color.equalsIgnoreCase("navy")) {
+            return Color.NAVY;
+        } else if (color.equalsIgnoreCase("olive")) {
+            return Color.OLIVE;
+        } else if (color.equalsIgnoreCase("orange")) {
+            return Color.ORANGE;
+        } else if (color.equalsIgnoreCase("purple")) {
+            return Color.PURPLE;
+        } else if (color.equalsIgnoreCase("silver")) {
+            return Color.SILVER;
+        } else if (color.equalsIgnoreCase("teal")) {
+            return Color.TEAL;
+        } else if (color.equalsIgnoreCase("white")) {
+            return Color.WHITE;
+        } else if (color.equalsIgnoreCase("yellow")) {
+            return Color.YELLOW;
+        }
+
+        return null;
     }
 }

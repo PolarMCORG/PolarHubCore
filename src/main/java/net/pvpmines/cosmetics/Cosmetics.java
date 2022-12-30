@@ -1,19 +1,19 @@
 package net.pvpmines.cosmetics;
 
-import net.pvpmines.cosmetics.armor.ArmorType;
 import net.pvpmines.cosmetics.particles.ParticleType;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class Cosmetics {
 
     public static HashMap<UUID, ParticleType> particles = new HashMap<>();
-    public static HashMap<UUID, ArmorType> armor = new HashMap<>();;
+    public static ArrayList<UUID> armor = new ArrayList<>();
 
     public void cosmeticEvent(PlayerMoveEvent event) {
         if (!particles.containsKey(event.getPlayer().getUniqueId())) return;

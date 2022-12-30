@@ -2,29 +2,27 @@ package net.pvpmines.queue.task;
 
 import net.pvpmines.Hub;
 import net.pvpmines.queue.Queue;
+import net.pvpmines.queue.QueueAdapter;
 import org.bukkit.Bukkit;
 
 public class QueueTask {
 
     private final Hub hub;
     private final Queue queue = new Queue();
-    public QueueTask(Hub hub){
+    private final String queueType;
+    public QueueTask(Hub hub, String queueType){
         this.hub = hub;
+        this.queueType = queueType;
         init();
     }
 
     private void init(){
-        Bukkit.getScheduler().runTaskTimer(hub, new Runnable() {
-
-            int i = hub.getConfig().getInt("delay");
+        Bukkit.getScheduler().runTaskTimer(this.hub, new Runnable() {
             @Override
             public void run() {
-                i--;
-                if (i <= 0) {
-                    queue.send();
-                    i = hub.getConfig().getInt("delay");
-                }
+                queue.send(queueType);
+
             }
-        },0L,20L);
+        },0L,hub.getConfig().getInt("delay") * 20L);
     }
 }
