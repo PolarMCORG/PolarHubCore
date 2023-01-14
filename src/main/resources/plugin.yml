@@ -2,7 +2,7 @@ name: Hub
 version: '${project.version}'
 main: net.pvpmines.Hub
 author: KacperM
-description: Hub Core made for PVPMines
+description: Hub Core made for PolarMC
 api-version: 1.19
 commands:
   discord:
@@ -11,3 +11,4 @@ commands:
   website:
     aliases: [forums]
   leavequeue:
+  pausequeue:

@@ -1,25 +1,30 @@
 package net.pvpmines;
 
-import io.github.nosequel.tab.TabHandler;
 import io.github.thatkawaiisam.assemble.Assemble;
 import io.github.thatkawaiisam.assemble.AssembleStyle;
 import lombok.Getter;
+import net.milkbowl.vault.chat.Chat;
 import net.pvpmines.command.*;
 import net.pvpmines.listener.HubListener;
 import net.pvpmines.queue.Queue;
 import net.pvpmines.queue.task.QueueTask;
 import net.pvpmines.scoreboard.ScoreboardAdapter;
 
-import net.pvpmines.tablist.TabAdapter;
 import net.pvpmines.utils.bungeecord.BungeeListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Getter
 public final class Hub extends JavaPlugin {
 
     private static Hub instance;
+    private static Chat chat = null;
+    public static HashMap<String, QueueTask> queueTaskHashMap = new LinkedHashMap<>();
     @Override
     public void onEnable() {
         instance = this;
@@ -30,11 +35,15 @@ public final class Hub extends JavaPlugin {
         this.commands();
         this.listener();
         this.scoreboard();
-        this.tab();
         new Queue().loadQueues();
         for (final String queue : this.getConfig().getStringList("queues")) {
-            new QueueTask(this, queue);
+            QueueTask queueTask = new QueueTask(this, queue);
+            queueTaskHashMap.put(queue, queueTask);
+            queueTask.init();
         }
+        setupChat();
+        saveResource("config.yml", false);
+        reloadConfig();
     }
 
     public static Hub getInstance() {
@@ -52,6 +61,7 @@ public final class Hub extends JavaPlugin {
         getCommand("twitter").setExecutor(new TwitterCommand(this));
         getCommand("website").setExecutor(new WebsiteCommand(this));
         getCommand("leavequeue").setExecutor(new LeaveQueueCommand());
+        getCommand("pausequeue").setExecutor(new PauseQueueCommand(this));
     }
 
     private void listener(){
@@ -64,8 +74,13 @@ public final class Hub extends JavaPlugin {
         assemble.setTicks(2);
         assemble.setAssembleStyle(AssembleStyle.KOHI);
     }
+    private boolean setupChat() {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        chat = rsp.getProvider();
+        return chat != null;
+    }
 
-    private void tab(){
-        new TabHandler(new TabAdapter(this), this, 20L);
+    public static Chat getChat() {
+        return chat;
     }
 }

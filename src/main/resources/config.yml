@@ -1,24 +1,30 @@
-discord: "discord.gg/pvpmines"
-twitter: "twitter.com/pvpmines"
-store: "store.pvpmines.net"
-website: "pvpmines.net"
+discord: "discord.gg/polarmc"
+twitter: "twitter.com/polarmc"
+store: "store.polarmc.org"
+website: "polarmc.org"
+
+spawn:
+  x: 1.5
+  y: 42
+  z: 0.5
 
 shown: "&aYou have enabled players visiblity"
 hidden: "&cYou have disabled players visiblity"
 
 queues:
-  - "prison"
+  - "smp"
 delay: 3 # in seconds FOR QUEUE SYSTEM
 priority: [1,2,3,4,5,6,7,8,9,10] # permission -> queue.priority.index
-queue-join: "You jave joined queue %player% %queue_position% %queue_size%"
-queue-leave: "You have left queue"
-queue-update: "%player% %queue_position% %queue_size%"
-
+queue-join: "&aYou have joined queue."
+queue-leave: "&cYou have left queue."
+queue-update: "%player% %position% %size%"
+queue-paused: "&cQueue %queue% has been paused"
+queue-unpause: "&aQueue %queue% has been unpause"
 
 join:
   message:
     - "&f&m-------------------------------"
-    - "&7Welcome to &4&lPVP&fMines "
+    - "&7Welcome to &b&lPolar&fMC "
     - ""
     - "&a&lStore: &f%store%"
     - "&e&lForums: &f%website%"
@@ -68,25 +74,41 @@ inventory:
     size: 27
     items:
       1:
-        item: "DIAMOND_PICKAXE"
-        name: "&b&lPRISONS"
+        item: "GRASS"
+        name: "&b&lSKYBLOCK"
         lore:
           - "&f&m----------------------------"
-          - "&fRight click to connect"
-          - "&f&m----------------------------"
-        data: 0
-        slot: 12
-        server: "prison"
-      2:
-        item: "DIAMOND_SWORD"
-        name: "&b&lFACTIONS"
-        lore:
-          - "&f&m----------------------------"
-          - "&fRight click to connect"
+          - "&b&lCOMING SOON..."
           - "&f&m----------------------------"
         data: 0
         slot: 14
-        server: "factions"
+        server: "prison"
+      2:
+        item: "DIAMOND_SWORD"
+        name: "&b&lSMP"
+        lore:
+          - "&f&m----------------------------"
+          - "&b&lRELEASE &7on &bRELEASE DATE"
+          - ""
+          - "&b&lFEATURES"
+          - "&b• &fBASE BUILDING COMPETITION"
+          - "&b• &fTEAM PVP TOURNAMENT"
+          - "&b• &fQUESTS"
+          - "&b• &fTOKENS"
+          - "&b• &fBATTLE-PASS"
+          - "&b• &fDTC"
+          - "&b• &fMINI-GAMES"
+          - "&b• &fCHAT MINI-GAMES"
+          - "&b• &fMany More..."
+          - ""
+          - "&b&lPLAY ALONG WITH:"
+          - "&7• &bJDJace&7, &bExpert"
+          - ""
+          - "&aClick To Connect"
+          - "&f&m----------------------------"
+        data: 0
+        slot: 12
+        server: "smp"
   cosmetic:
     overlay: true
     overlay-item: "STAINED_GLASS_PANE"
@@ -117,7 +139,7 @@ cosmetic:
   particle: # PARTICLES (FLAME, WATER, LAVA, EXPLOSION)
     overlay: true
     overlay-item: "STAINED_GLASS_PANE"
-    overlay-data: 10
+    overlay-data: 11
     title: "&dParticle Selector"
     size: 27
     items: # PERMISSION -> hub.cosmetic.particle name from #particle
@@ -207,21 +229,24 @@ cosmetic:
         data: 0
         slot: 26
 
+chat-format: "%rank% %player%&7:&f %message%"
+
 scoreboard:
-  title: "&4&lPVP&fMines &7(Hub)"
+  title: "&b&lPolar&fMC &7(Hub)"
   normal:
     - " "
-    - "&4&lPLAYER"
-    - "  &fAccount: &4%player%"
+    - "&b&lPLAYER"
+    - "  &fAccount: &b%player%"
     - " "
-    - "&4&LGLOBAL"
-    - "  &fPlayers: &4%online%"
+    - "&b&LRANK"
+    - "  &fRank: %rank%"
     - " "
-    - "&7&opvpmines.net"
-  queue:
-    - ""
-    - ""
-    - ""
+    - "&b&lQUEUE"
+    - "  &fQueue: &b%queue%"
+    - "  &fPosition: &b%position%"
+    - "  &fSize: &b%size%"
+    - "  "
+    - "&7&opolarmc.org"
 
 tab:
   header: "HEADER"

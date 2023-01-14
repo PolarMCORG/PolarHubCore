@@ -1,6 +1,8 @@
 package net.pvpmines.listener;
 
+import com.nametagedit.plugin.NametagEdit;
 import lombok.Getter;
+
 import net.pvpmines.Hub;
 import net.pvpmines.cosmetics.Cosmetics;
 import net.pvpmines.queue.Queue;
@@ -44,12 +46,10 @@ public class HubListener implements Listener {
         this.hub = hub;
 
     }
-
-    @EventHandler
+    @EventHandler @Deprecated
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Player player = event.getPlayer();
-
         for (final String i : this.hub.getConfig().getStringList("join.message")) {
             player.sendMessage(CC.translate(i)
                     .replace("%player%", player.getName())
@@ -68,6 +68,12 @@ public class HubListener implements Listener {
             Player p = Bukkit.getPlayer(uuid);
             p.hidePlayer(event.getPlayer());
         }
+        NametagEdit.getApi().setPrefix(player, " " + CC.translate(Hub.getChat().getPrimaryGroup(player)) + " ");
+        player.teleport(new Location(Bukkit.getWorld("world"),
+                this.hub.getConfig().getDouble("spawn.x"),
+                this.hub.getConfig().getDouble("spawn.y"),
+                this.hub.getConfig().getDouble("spawn.z")));
+
     }
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
@@ -210,25 +216,6 @@ public class HubListener implements Listener {
         }
     }
 
-    /*
-        @EventHandler
-    public void onArmorInteract(PlayerInteractEvent event) {
-        if (event.getPlayer().getItemInHand() == null
-                || event.getPlayer().getItemInHand().getItemMeta() == null
-                || event.getPlayer().getItemInHand().getItemMeta().getDisplayName() == null) return;
-
-        if (!event.getPlayer().getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(
-                this.hub.getConfig().getString("items.armor.name")
-        ))) return;
-
-        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-            this.armorInventory = new ArmorInventory(this.hub, event.getPlayer());
-            this.armorInventory.loadItems();
-            this.armorInventory.open();
-        }
-    }
-     */
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory().getTitle().equalsIgnoreCase(CC.translate(this.hub.getConfig()
@@ -242,7 +229,6 @@ public class HubListener implements Listener {
             if (event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null || event.getCurrentItem().getItemMeta().getDisplayName() == null) return;
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(CC.translate(this.hub
                     .getConfig().getString("inventory.selector.items." + i + ".name")))) {
-                event.getWhoClicked().sendMessage(this.hub.getConfig().getString("inventory.selector.items." + i + ".server"));
                 this.queue.addPlayer((Player) event.getWhoClicked(), this.hub.getConfig().getString("inventory.selector.items." + i + ".server"));
             }
         }
@@ -296,6 +282,14 @@ public class HubListener implements Listener {
                 this.cosmetics.clearEffect(event.getWhoClicked().getUniqueId());
             }
         }
+    }
+
+    @EventHandler
+    public void onAsync(AsyncPlayerChatEvent event) {
+        event.setFormat(CC.translate(this.hub.getConfig().getString("chat-format")
+                .replace("%player%", event.getPlayer().getName())
+                .replace("%rank%", Hub.getChat().getPrimaryGroup(event.getPlayer()))
+                .replace("%message%", event.getMessage())));
     }
 
     @EventHandler
